@@ -1,7 +1,7 @@
 module.exports = {
     parse: parse,
-    extractCodeBlock: extractCodeBlock,
-    extractHeadersAndStack: extractHeadersAndStack
+    extract_code_block: extract_code_block,
+    extract_headers_and_stack: extract_headers_and_stack
 }
 
 function parse(messages) {
@@ -18,60 +18,60 @@ function parse(messages) {
     return result;
 }
 
-function extractCodeBlock(attachmentText) {
-    if (attachmentText === undefined || attachmentText === '') {
+function extract_code_block(attachment_text) {
+    if (attachment_text === undefined || attachment_text === '') {
         return ''
     }
 
-    var startIndex = attachmentText.indexOf('```', 0) 
-    var endIndex = attachmentText.lastIndexOf('```')
-    if (startIndex < 0) {
+    var start_index = attachment_text.indexOf('```', 0) 
+    var end_index = attachment_text.lastIndexOf('```')
+    if (start_index < 0) {
         return ''
     }
 
-    var codeBlock = attachmentText.substring(startIndex + 3, endIndex)
-    if (codeBlock !== undefined) {
-        return codeBlock
+    var code_block = attachment_text.substring(start_index + 3, end_index)
+    if (code_block !== undefined) {
+        return code_block
     }
     return ''
 }
 
-function extractHeadersAndStack(codeBlock) {
-    if (codeBlock === undefined || codeBlock === '') {
+function extract_headers_and_stack(code_block) {
+    if (code_block === undefined || code_block === '') {
         return []
     }
 
-    var index = codeBlock.indexOf('[')
+    var index = code_block.indexOf('[')
     if (index < 0) {
         return []
     }
 
     var timestamp
-    var logLevel
-    var codeClass
+    var log_level
+    var code_class
     var project
 
     for (var i = 0; i < 4; i++) {
-        codeBlock = codeBlock.trim()
-        var indexOfFirstBracket = codeBlock.indexOf('[')
-        var header = codeBlock.substring(indexOfFirstBracket + 1, codeBlock.indexOf(']', indexOfFirstBracket))
+        code_block = code_block.trim()
+        var index_of_first_bracket = code_block.indexOf('[')
+        var header = code_block.substring(index_of_first_bracket + 1, code_block.indexOf(']', index_of_first_bracket))
         switch (i) {
             case 0:
                 timestamp = header
                 break
             case 1:
-                logLevel = header
+                log_level = header
                 break
             case 2:
-                codeClass = header
+                code_class = header
                 break
             case 3: 
                 project = header
                 break
         }
 
-        codeBlock = codeBlock.substring(header.length + 2)        
+        code_block = code_block.substring(header.length + 2)        
     }
 
-    return [{timestamp: timestamp, logLevel: logLevel, codeClass: codeClass, project: project, stack: codeBlock.trim()}]
+    return [{timestamp: timestamp, log_level: log_level, code_class: code_class, project: project, stack: code_block.trim()}]
 }

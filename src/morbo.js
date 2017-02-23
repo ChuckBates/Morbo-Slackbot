@@ -3,10 +3,6 @@ if (!process.env.token) {
     process.exit(1)
 }
 
-module.exports = {
-    getChannelHistory: getChannelHistory
-}
-
 var Botkit = require('./lib/Botkit.js')
 var os = require('os')
 
