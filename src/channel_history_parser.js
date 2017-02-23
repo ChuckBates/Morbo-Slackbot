@@ -1,6 +1,7 @@
 module.exports = {
     parse: parse,
-    extractCodeBlock: extractCodeBlock
+    extractCodeBlock: extractCodeBlock,
+    extractHeadersAndStack: extractHeadersAndStack
 }
 
 function parse(messages) {
@@ -14,7 +15,6 @@ function parse(messages) {
             }
         }, this);
     }
-    
     return result;
 }
 
@@ -34,4 +34,44 @@ function extractCodeBlock(attachmentText) {
         return codeBlock
     }
     return ''
+}
+
+function extractHeadersAndStack(codeBlock) {
+    if (codeBlock === undefined || codeBlock === '') {
+        return []
+    }
+
+    var index = codeBlock.indexOf('[')
+    if (index < 0) {
+        return []
+    }
+
+    var timestamp
+    var logLevel
+    var codeClass
+    var project
+
+    for (var i = 0; i < 4; i++) {
+        codeBlock = codeBlock.trim()
+        var indexOfFirstBracket = codeBlock.indexOf('[')
+        var header = codeBlock.substring(indexOfFirstBracket + 1, codeBlock.indexOf(']', indexOfFirstBracket))
+        switch (i) {
+            case 0:
+                timestamp = header
+                break
+            case 1:
+                logLevel = header
+                break
+            case 2:
+                codeClass = header
+                break
+            case 3: 
+                project = header
+                break
+        }
+
+        codeBlock = codeBlock.substring(header.length + 2)        
+    }
+
+    return [{timestamp: timestamp, logLevel: logLevel, codeClass: codeClass, project: project, stack: codeBlock.trim()}]
 }

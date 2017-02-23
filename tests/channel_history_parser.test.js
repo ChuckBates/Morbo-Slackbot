@@ -9,14 +9,14 @@ describe('channel_history_parser', function() {
             let messages = undefined
             let result = channel_history_parser.parse(messages)
 
-            assert.equal(result.values, [].values)
+            assert.deepEqual(result, [])
         })
 
         it('should return an empty array when given an empty array', () => {
             let messages = []
             let result = channel_history_parser.parse(messages)
 
-            assert.equal(result.values, messages.values)
+            assert.deepEqual(result, messages)
         })
 
         it('should not return error strings for empty messages', () => {
@@ -88,6 +88,69 @@ describe('channel_history_parser', function() {
             let result = channel_history_parser.extractCodeBlock(attachmentText)
 
             assert.equal(result, testText)
+        })
+    })
+
+    describe('extractHeadersAndStack', function() {
+        it('should return empty if undefined', () => {
+            let codeString = undefined
+            let result = channel_history_parser.extractHeadersAndStack(codeString)
+
+            assert.deepEqual(result, [])
+        })
+
+        it('should return empty if empty', () => {
+            let codeString = ''
+            let result = channel_history_parser.extractHeadersAndStack(codeString)
+
+            assert.deepEqual(result, [])
+        })
+
+        it('should return empty if no header brackets', () => {
+            let codeString = 'asdf 123 zxcv'
+            let result = channel_history_parser.extractHeadersAndStack(codeString)
+
+            assert.deepEqual(result, [])
+        })
+
+        it('should contain the frist header', () => {
+            let codeString = '[asdf] test'
+            let expected = [{timestamp: 'asdf', logLevel:'', codeClass:'', project:'', stack: ''}]
+            let result = channel_history_parser.extractHeadersAndStack(codeString)
+
+            assert.deepEqual(result, expected)
+        })
+
+        it('should contain the second header', () => {
+            let codeString = '[asdf] [test] '
+            let expected = [{timestamp: 'asdf', logLevel: 'test', codeClass:'', project:'', stack: ''}]
+            let result = channel_history_parser.extractHeadersAndStack(codeString)
+
+            assert.deepEqual(result, expected)
+        })
+
+        it('should contain the third header', () => {
+            let codeString = '[asdf] [test] [zxcv] '
+            let expected = [{timestamp: 'asdf', logLevel: 'test', codeClass:'zxcv', project:'', stack: ''}]
+            let result = channel_history_parser.extractHeadersAndStack(codeString)
+
+            assert.deepEqual(result, expected)
+        })
+
+        it('should contain the fourth header', () => {
+            let codeString = '[asdf] [test] [zxcv] [qwerty] '
+            let expected = [{timestamp: 'asdf', logLevel: 'test', codeClass: 'zxcv', project: 'qwerty', stack: ''}]
+            let result = channel_history_parser.extractHeadersAndStack(codeString)
+
+            assert.deepEqual(result, expected)
+        })
+
+        it('should contain the stack', () => {
+            let codeString = '[asdf] [test] [zxcv] [qwerty] 123'
+            let expected = [{timestamp: 'asdf', logLevel: 'test', codeClass: 'zxcv', project: 'qwerty', stack: '123'}]
+            let result = channel_history_parser.extractHeadersAndStack(codeString)
+
+            assert.deepEqual(result, expected)
         })
     })
 });
