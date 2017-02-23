@@ -54,11 +54,6 @@ describe('stack_parser', function() {
         describe('test valid stack', () => {
             test_remove('Uncaught Exception; the sun just exploded and we have 8 minutes to live!', ';', 'the sun just exploded and we have 8 minutes to live!')
         })
-
-        // describe('test valid stack 2', () => {
-        //     let expected = 'Hello? Is it me your looking for?'
-        //     test_remove('System.Is.Sentient.Exception: ' + expected + '; I can see it..', ':', expected)
-        // })
     })
 
     describe('handle_uncaught_exception', function() {
