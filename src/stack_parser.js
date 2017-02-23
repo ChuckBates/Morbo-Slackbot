@@ -1,6 +1,7 @@
 module.exports = {
     extract_first_statement: extract_first_statement,
-    remove_first_statement: remove_first_statement
+    remove_first_statement: remove_first_statement,
+    handle_uncaught_exception: handle_uncaught_exception
 }
 
 function extract_first_statement(stack, separator) {
@@ -26,4 +27,12 @@ function remove_first_statement(stack, separator) {
     }
 
     return stack.trim()
+}
+
+function handle_uncaught_exception(stack) {
+    if (stack === undefined || stack === '' || !stack.startsWith('Uncaught exception')) {
+        return ''
+    }
+
+    return extract_first_statement(remove_first_statement(remove_first_statement(stack, ':'), ':'), ';')
 }
