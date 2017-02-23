@@ -83,4 +83,27 @@ describe('stack_parser', function() {
             test_handle('Uncaught exception: System.Is.Sentient.Exception: ' + expected + '; I can see it..', expected)
         })
     })
+
+    describe('handle_corporate_subscription', function() {
+        let test_handle = (stack, expected) => {
+            it('should return ' + expected + ' when given ' + stack, () => {
+                let result = stack_parser.handle_corporate_subscription(stack)
+                assert.equal(result, expected)
+            })
+        }
+
+        describe('test undefined/empty', () => {
+            test_handle(undefined, '')
+            test_handle('', '')
+        })
+
+        describe('test not corporate sub', () => {
+            test_handle('Invalid Exception: System.IOException.Factory.Mother.Impl: Inheritance Unkown', '')
+        })
+
+        describe('test valid corporate sub stack', () => {
+            let expected = 'User has a corporate subscription'
+            test_handle('User 1234-asdf-zxcv-qwerty-567890 has a corporate subscription. Subscriber ID: 555555', expected)
+        })
+    })
 })

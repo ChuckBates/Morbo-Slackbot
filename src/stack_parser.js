@@ -1,7 +1,8 @@
 module.exports = {
     extract_first_statement: extract_first_statement,
     remove_first_statement: remove_first_statement,
-    handle_uncaught_exception: handle_uncaught_exception
+    handle_uncaught_exception: handle_uncaught_exception,
+    handle_corporate_subscription: handle_corporate_subscription
 }
 
 function extract_first_statement(stack, separator) {
@@ -35,4 +36,12 @@ function handle_uncaught_exception(stack) {
     }
 
     return extract_first_statement(remove_first_statement(remove_first_statement(stack, ':'), ':'), ';')
+}
+
+function handle_corporate_subscription(stack) {
+    if (stack === undefined || stack === '' || !extract_first_statement(stack, ':').includes('has a corporate subscription')) {
+        return ''
+    }
+
+    return 'User has a corporate subscription'
 }
