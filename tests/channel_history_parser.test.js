@@ -3,161 +3,107 @@
 const assert = require('assert')
 const channel_history_parser = require('../src/channel_history_parser')
 
-describe('channel_history_parser', function() {
-    describe('parse', function() {
-        it('should return an empty array when given undefined', () => {
-            let messages = undefined
-            let result = channel_history_parser.parse(messages)
+describe('channel_history_parser', function () {
+    describe('parse', function () {
+        let test_parse = (messages, expected) => {
+            it('should return ' + expected + ' when given ' + messages, () => {
+                let result = channel_history_parser.parse(messages)
+                assert.deepEqual(result, expected)
+            })
+        }
 
-            assert.deepEqual(result, [])
+        describe('test undefined/empty', () => {
+            test_parse(undefined, [])
+            test_parse([], [])
+            test_parse([{}, {}, {}], [])
         })
 
-        it('should return an empty array when given an empty array', () => {
-            let messages = []
-            let result = channel_history_parser.parse(messages)
-
-            assert.deepEqual(result, messages)
-        })
-
-        it('should not return error strings for empty messages', () => {
-            let messages = [{}, {}, {}]
-            let result = channel_history_parser.parse(messages)
-
-            assert.equal(result.length, 0)
-        })
-
-        it('should not return error strings for messages that are not bot-posted', () => {
+        describe('test is bot-posted', () => {
+            let expected = { text: '', type: 'message', subtype: 'bot_message', attachments: [{ text: '' }] }
             let messages = [
-                {text: '', type: 'message', subtype: 'not_bot_message'}, 
-                {text: '', type: 'message', subtype: 'bot_message', attachments: [{text: ''}]}, 
+                { text: '', type: 'message', subtype: 'not_bot_message' },
+                expected,
                 {}
             ]
-            let result = channel_history_parser.parse(messages)
-
-            assert.equal(result.length, 1)
+            test_parse(messages, [expected])
         })
 
-        it('should not return error strings for messages that do not have attachments', () => {
+        describe('test has attachment text', () => {
+            let expected = { text: '', type: 'message', subtype: 'bot_message', attachments: [{ text: '' }] }
             let messages = [
-                {text: '', type: 'message', subtype: 'not_bot_message'}, 
-                {text: '', type: 'message', subtype: 'bot_message', attachments: [{text: ''}]}, 
-                {text: '', type: 'message', subtype: 'bot_message'}
+                { text: '', type: 'message', subtype: 'not_bot_message' },
+                expected,
+                { text: '', type: 'message', subtype: 'bot_message' }
             ]
-            let result = channel_history_parser.parse(messages)
-
-            assert.equal(result.length, 1)
+            test_parse(messages, [expected])
         })
 
-        it('should return error strings for messages that have attachment text', () => {
+        describe('test has attachement text and is bot posted', () => {
+            let expected = { text: '', type: 'message', subtype: 'bot_message', attachments: [{ text: '' }] }
             let messages = [
-                {text: '', type: 'message', subtype: 'not_bot_message'}, 
-                {text: '', type: 'message', subtype: 'bot_message', attachments: [{text: ''}]}, 
-                {text: '', type: 'message', subtype: 'bot_message', attachments: []}
+                { text: '', type: 'message', subtype: 'not_bot_message' },
+                expected,
+                { text: '', type: 'message', subtype: 'bot_message', attachments: [] }
             ]
-            let result = channel_history_parser.parse(messages)
-
-            assert.equal(result.length, 1)
-        })
-    })    
-
-    describe('extractCodeBlock', function() {
-        it('should return empty if undefined', () => {
-            let attachmentText = undefined
-            let result = channel_history_parser.extractCodeBlock(attachmentText)
-
-            assert.equal(result, '')
-        })
-
-        it('should return empty if empty', () => {
-            let attachmentText = ''
-            let result = channel_history_parser.extractCodeBlock(attachmentText)
-
-            assert.equal(result, '')
-        })
-
-        it('should return empty if no code block', () => {
-            let attachmentText = 'asdf 123 zxcv'
-            let result = channel_history_parser.extractCodeBlock(attachmentText)
-
-            assert.equal(result, '')
-        })
-
-        it('should return contents of code block', () => {
-            let testText = 'find_me'
-            let attachmentText = 'asdf ```' + testText + '```zxcv'
-            let result = channel_history_parser.extractCodeBlock(attachmentText)
-
-            assert.equal(result, testText)
+            test_parse(messages, [expected])
         })
     })
 
-    describe('extractHeadersAndStack', function() {
-        it('should return empty if undefined', () => {
-            let codeString = undefined
-            let result = channel_history_parser.extractHeadersAndStack(codeString)
+    describe('extractCodeBlock', function () {
+        let test_extract_code_block = (attachement_text, expected) => {
+            it('should return ' + expected + ' when given ' + attachement_text, () => {
+                let result = channel_history_parser.extractCodeBlock(attachement_text)
+                assert.equal(result, expected)
+            })
+        }
 
-            assert.deepEqual(result, [])
+        describe('test undefined/empty', () => {
+            test_extract_code_block(undefined, '')
+            test_extract_code_block('', '')
+            test_extract_code_block('asdf 123 zxcv', '')
         })
 
-        it('should return empty if empty', () => {
-            let codeString = ''
-            let result = channel_history_parser.extractHeadersAndStack(codeString)
+        describe('test has code block', () => {
+            let expected = 'finde me'
+            let attachement_text = 'asdf ```' + expected + '``` zxcv'
+            test_extract_code_block(attachement_text, expected)
+        })
+    })
 
-            assert.deepEqual(result, [])
+    describe('extractHeadersAndStack', function () {
+        let test_extract_headers_and_stack = (code_string, expected) => {
+            it('should return ' + expected + ' when given ' + code_string, () => {
+                let result = channel_history_parser.extractHeadersAndStack(code_string)
+                assert.deepEqual(result, expected)
+            })
+        }
+
+        describe('test undefined/empty', () => {
+            test_extract_headers_and_stack(undefined, [])
+            test_extract_headers_and_stack('', [])
+            test_extract_headers_and_stack('asdf 123 zxcv', [])
         })
 
-        it('should return empty if no header brackets', () => {
-            let codeString = 'asdf 123 zxcv'
-            let result = channel_history_parser.extractHeadersAndStack(codeString)
-
-            assert.deepEqual(result, [])
-        })
-
-        it('should contain the frist header', () => {
+        describe('test extracting headers and stack', () => {
             let codeString = '[asdf] test'
-            let expected = [{timestamp: 'asdf', logLevel:'', codeClass:'', project:'', stack: ''}]
-            let result = channel_history_parser.extractHeadersAndStack(codeString)
+            let expected = [{ timestamp: 'asdf', logLevel: '', codeClass: '', project: '', stack: '' }]
+            test_extract_headers_and_stack(codeString, expected)
 
-            assert.deepEqual(result, expected)
-        })
+            codeString = '[asdf] [test] '
+            expected = [{ timestamp: 'asdf', logLevel: 'test', codeClass: '', project: '', stack: '' }]
+            test_extract_headers_and_stack(codeString, expected)
 
-        it('should contain the second header', () => {
-            let codeString = '[asdf] [test] '
-            let expected = [{timestamp: 'asdf', logLevel: 'test', codeClass:'', project:'', stack: ''}]
-            let result = channel_history_parser.extractHeadersAndStack(codeString)
+            codeString = '[asdf] [test] [zxcv] '
+            expected = [{ timestamp: 'asdf', logLevel: 'test', codeClass: 'zxcv', project: '', stack: '' }]
+            test_extract_headers_and_stack(codeString, expected)
 
-            assert.deepEqual(result, expected)
-        })
+            codeString = '[asdf] [test] [zxcv] [qwerty] '
+            expected = [{ timestamp: 'asdf', logLevel: 'test', codeClass: 'zxcv', project: 'qwerty', stack: '' }]
+            test_extract_headers_and_stack(codeString, expected)
 
-        it('should contain the third header', () => {
-            let codeString = '[asdf] [test] [zxcv] '
-            let expected = [{timestamp: 'asdf', logLevel: 'test', codeClass:'zxcv', project:'', stack: ''}]
-            let result = channel_history_parser.extractHeadersAndStack(codeString)
-
-            assert.deepEqual(result, expected)
-        })
-
-        it('should contain the fourth header', () => {
-            let codeString = '[asdf] [test] [zxcv] [qwerty] '
-            let expected = [{timestamp: 'asdf', logLevel: 'test', codeClass: 'zxcv', project: 'qwerty', stack: ''}]
-            let result = channel_history_parser.extractHeadersAndStack(codeString)
-
-            assert.deepEqual(result, expected)
-        })
-
-        it('should contain the stack', () => {
-            let codeString = '[asdf] [test] [zxcv] [qwerty] 123'
-            let expected = [{timestamp: 'asdf', logLevel: 'test', codeClass: 'zxcv', project: 'qwerty', stack: '123'}]
-            let result = channel_history_parser.extractHeadersAndStack(codeString)
-
-            assert.deepEqual(result, expected)
+            codeString = '[asdf] [test] [zxcv] [qwerty] 123'
+            expected = [{ timestamp: 'asdf', logLevel: 'test', codeClass: 'zxcv', project: 'qwerty', stack: '123' }]
+            test_extract_headers_and_stack(codeString, expected)
         })
     })
 });
-
-
-// "Alert: 1 errors detected in `IndSubscriptionUpdatedHandler Error` query in the last 15 minutes
-// Hosts: `10.107.3.82 (IPW-REDEMPTION-USERACCOUNTS-1)`
-
-// <https://kibana.pluralsight.com/kibana4/#/dashboard/Log4Net_Errors|Details>
-// ```[2017-02-18 04:02:53,613] [ERROR] [PS.Services.UserAccountsNan.IndividualSubscriptionUpdatedHandler] [PS.UserAccountsServiceNan] User 19f67fb6-8d6d-4939-842c-73667aaa2646 has a corporate subscription. Subscriber ID: 151682```"
