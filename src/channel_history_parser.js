@@ -73,5 +73,13 @@ function extract_headers_and_stack(code_block) {
         code_block = code_block.substring(header.length + 2)        
     }
 
-    return [{timestamp: timestamp, log_level: log_level, code_class: code_class, project: project, stack: code_block.trim()}]
+    return [
+                {
+                    timestamp: timestamp, 
+                    log_level: log_level, 
+                    code_class: code_class, 
+                    project: project, 
+                    stack: code_block.trim()
+                }
+            ]
 }
