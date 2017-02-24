@@ -1,7 +1,7 @@
 module.exports = {
     extract_first_statement: extract_first_statement,
     remove_first_statement: remove_first_statement,
-    handle_uncaught_exception: handle_uncaught_exception,
+    handle_uncaught_or_inner_exception: handle_uncaught_or_inner_exception,
     handle_corporate_subscription: handle_corporate_subscription
 }
 
@@ -30,8 +30,8 @@ function remove_first_statement(stack, separator) {
     return stack.trim()
 }
 
-function handle_uncaught_exception(stack) {
-    if (stack === undefined || stack === '' || !stack.startsWith('Uncaught exception')) {
+function handle_uncaught_or_inner_exception(stack) {
+    if (stack === undefined || stack === '' || (!stack.startsWith('Uncaught exception') && !stack.startsWith('Inner exception'))) {
         return ''
     }
 

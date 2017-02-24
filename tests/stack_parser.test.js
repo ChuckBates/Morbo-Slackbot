@@ -56,10 +56,10 @@ describe('stack_parser', function() {
         })
     })
 
-    describe('handle_uncaught_exception', function() {
+    describe('handle_uncaught_or_inner_exception', function() {
         let test_handle = (stack, expected) => {
             it('should return ' + expected + ' when given ' + stack, () => {
-                let result = stack_parser.handle_uncaught_exception(stack)
+                let result = stack_parser.handle_uncaught_or_inner_exception(stack)
                 assert.equal(result, expected)
             })
         }
@@ -69,8 +69,16 @@ describe('stack_parser', function() {
             test_handle('', '')
         })
 
-        describe('test not uncaught', () => {
+        describe('test not uncaught and not inner', () => {
             test_handle('Invalid: zxcv is not a real word', '')
+        })
+
+        describe('test valid inner exception', () => {
+            let expected = 'It was not possible to connect to the redis server(s)'
+            let stack = 'Inner exception: StackExchange.Redis.RedisConnectionException: ' + 
+                        expected + 
+                        '; to create a disconnected multiplexer'
+            test_handle(stack, expected)
         })
 
         describe('test valid uncaught exception', () => {
