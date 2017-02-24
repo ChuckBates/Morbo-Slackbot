@@ -4,6 +4,37 @@ const assert = require('assert')
 const stack_parser = require('../src/stack_parser')
 
 describe('stack_parser', function() {
+    describe('parse', function() {
+        let test_parse = (stack, expected) => {
+            it('shoule return ' + expected + ' when given ' + stack, () => {
+                let result = stack_parser.parse(stack)
+                assert.equal(result, expected)
+            })
+        }
+
+        describe('test valid corporate sub', () => {
+            let expected = 'User has a corporate subscription'
+            test_parse('User 1234-asdf-zxcv-qwerty-567890 has a corporate subscription. Subscriber ID: 555555', expected)
+        })
+
+        describe('test valid inner exception', () => {
+            let expected = 'It was not possible to connect to the redis server(s)'
+            let stack = 'Inner exception: StackExchange.Redis.RedisConnectionException: ' + 
+                        expected + 
+                        '; to create a disconnected multiplexer'
+            test_parse(stack, expected)
+        })
+
+        describe('test valid uncaught exception', () => {
+            let expected = 'Email record not found'
+            let stack = 'Uncaught exception:: System.InvalidOperationException: Email record not found. ' +
+                        'Attempting to find email eric-andres+test-failure@pluralsight.com ' +
+                        'for handle d2f32396-4445-496a-a61d-22d7c51a3bcb;    ' +
+                        'at PS.Identity.Email.EmailHandler.ThrowIfEmailRecordIsNull(EmailRecordV2 '
+            test_parse(stack, expected)
+        })
+    })
+
     describe('extract_first_statement', function() {
         let test_extract = (stack, separator, expected) => {
             it('should return ' + expected + ' when given ' + stack + ' with separator ' + separator, () => {
@@ -107,6 +138,40 @@ describe('stack_parser', function() {
         describe('test valid corporate sub stack', () => {
             let expected = 'User has a corporate subscription'
             test_handle('User 1234-asdf-zxcv-qwerty-567890 has a corporate subscription. Subscriber ID: 555555', expected)
+        })
+    })
+
+    describe('extract_short_error', function() {
+        let test_extract = (stack, expected) => {
+            it('should return ' + expected + ' when given ' + stack, () => {
+                let result = stack_parser.extract_short_error(stack)
+                assert.equal(result, expected)
+            })
+        }
+
+        describe('test undefined/empty', () => {
+            test_extract(undefined, '')
+            test_extract('', '')
+        })
+
+        describe('test has period in first 100 characters', () => {
+            let expected = 'Email record not found'
+            test_extract('Email record not found. Attempting to find email for handle', expected)
+        })
+
+        describe('test has colon in first 100 characters', () => {
+            let expected = 'Email record not found'
+            test_extract('Email record not found: Attempting to find email for handle', expected)
+        })
+
+        describe('test has semi-colon in first 100 characters', () => {
+            let expected = 'Email record not found'
+            test_extract('Email record not found; Attempting to find email for handle', expected)
+        })
+
+        describe('test has comma in first 100 characters', () => {
+            let expected = 'Email record not found'
+            test_extract('Email record not found, Attempting to find email for handle', expected)
         })
     })
 })
