@@ -4,18 +4,26 @@ module.exports = {
     extract_headers_and_stack: extract_headers_and_stack
 }
 
+const consts = require('../src/consts')
+
 function parse(messages) {
     var result = []
     if (messages !== undefined) {
         messages.forEach(function(message) {
-            if (message.subtype === 'bot_message' && message.attachments !== undefined) {
-                if (message.attachments[0] !== undefined && message.attachments[0].text !== undefined) {
-                    result.push(message)
-                }            
+            if (is_es_alert_bot_posted(message) && is_attachment_text_available(message)) {
+                    result.push(message.attachments[0].text)
             }
-        }, this);
+        }, this)
     }
-    return result;
+    return result
+}
+
+function is_es_alert_bot_posted(message) {
+    return message.subtype === 'bot_message' && message.bot_id === consts.es_alert_bot_id
+}
+
+function is_attachment_text_available(message) {
+    return message.attachments !== undefined && message.attachments[0] !== undefined && message.attachments[0].text != undefined
 }
 
 function extract_code_block(attachment_text) {

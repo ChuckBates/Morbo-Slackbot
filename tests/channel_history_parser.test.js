@@ -1,12 +1,13 @@
 "use strict";
 
 const assert = require('assert')
+const consts = require('../src/consts')
 const channel_history_parser = require('../src/channel_history_parser')
 
 describe('channel_history_parser', function () {
     describe('parse', function () {
         let test_parse = (messages, expected) => {
-            it('should return ' + expected + ' when given ' + messages, () => {
+            it('should return ' + expected + ' when given ' + JSON.stringify(messages), () => {
                 let result = channel_history_parser.parse(messages)
                 assert.deepEqual(result, expected)
             })
@@ -19,31 +20,50 @@ describe('channel_history_parser', function () {
         })
 
         describe('test is bot-posted', () => {
-            let expected = { text: '', type: 'message', subtype: 'bot_message', attachments: [{ text: '' }] }
+            let expected = 'attachement_text'
             let messages = [
                 { text: '', type: 'message', subtype: 'not_bot_message' },
-                expected,
+                { text: '', type: 'message', subtype: 'bot_message', bot_id: consts.es_alert_bot_id, attachments: [{ text: expected }]},
                 {}
             ]
             test_parse(messages, [expected])
         })
 
         describe('test has attachment text', () => {
-            let expected = { text: '', type: 'message', subtype: 'bot_message', attachments: [{ text: '' }] }
+            let expected = 'attachement_text'
             let messages = [
                 { text: '', type: 'message', subtype: 'not_bot_message' },
-                expected,
+                { text: '', type: 'message', subtype: 'bot_message', bot_id: consts.es_alert_bot_id, attachments: [{ text: expected }] },
                 { text: '', type: 'message', subtype: 'bot_message' }
             ]
             test_parse(messages, [expected])
         })
 
         describe('test has attachement text and is bot posted', () => {
-            let expected = { text: '', type: 'message', subtype: 'bot_message', attachments: [{ text: '' }] }
+            let expected = 'attachement_text'
             let messages = [
                 { text: '', type: 'message', subtype: 'not_bot_message' },
-                expected,
+                { text: '', type: 'message', subtype: 'bot_message', bot_id: consts.es_alert_bot_id, attachments: [{ text: expected }] },
                 { text: '', type: 'message', subtype: 'bot_message', attachments: [] }
+            ]
+            test_parse(messages, [expected])
+        })
+
+        describe('test has multiple valid messages', () => {
+            let expected = ['attachement_text', 'other_attachment_text']
+            let messages = [
+                { text: '', type: 'message', subtype: 'not_bot_message' },
+                { text: '', type: 'message', subtype: 'bot_message', bot_id: consts.es_alert_bot_id, attachments: [{ text: 'attachement_text' }] },
+                { text: '', type: 'message', subtype: 'bot_message', bot_id: consts.es_alert_bot_id, attachments: [{ text: 'other_attachment_text' }] }
+            ]
+            test_parse(messages, expected)
+        })
+
+        describe('test posted by es_alert_bot', () => {
+            let expected = 'attachment_text'
+            let messages = [
+                { text: '', type: 'message', subtype: 'bot_message', bot_id: 'not_correct_id', attachments: [{ text: 'other_attachnemt_text' }] },
+                { text: '', type: 'message', subtype: 'bot_message', bot_id: consts.es_alert_bot_id, attachments: [{ text: expected }] }
             ]
             test_parse(messages, [expected])
         })
