@@ -144,7 +144,8 @@ describe('stack_parser', function() {
     describe('extract_short_error', function() {
         let test_extract = (stack, expected) => {
             it('should return ' + expected + ' when given ' + stack, () => {
-                let result = stack_parser.extract_short_error(stack)
+                let space = ' '
+                let result = stack_parser.extract_short_error(stack, space)
                 assert.equal(result, expected)
             })
         }
@@ -154,24 +155,36 @@ describe('stack_parser', function() {
             test_extract('', '')
         })
 
-        describe('test has period in first 100 characters', () => {
+        describe('test has period + space in first 100 characters', () => {
             let expected = 'Email record not found'
             test_extract('Email record not found. Attempting to find email for handle', expected)
         })
 
-        describe('test has colon in first 100 characters', () => {
+        describe('test has colon + space in first 100 characters', () => {
             let expected = 'Email record not found'
             test_extract('Email record not found: Attempting to find email for handle', expected)
         })
 
-        describe('test has semi-colon in first 100 characters', () => {
+        describe('test has semi-colon + space in first 100 characters', () => {
             let expected = 'Email record not found'
             test_extract('Email record not found; Attempting to find email for handle', expected)
         })
 
-        describe('test has comma in first 100 characters', () => {
+        describe('test has comma + space in first 100 characters', () => {
             let expected = 'Email record not found'
             test_extract('Email record not found, Attempting to find email for handle', expected)
+        })
+
+        describe('test has colon + NO space after first 75 characters', () => {
+            let expected = 'Timeout performing GET identity-unauthorized-device-id'
+            let stack = expected + ':3840G-3N3287G2-G34323G3-6NJDD23G4'
+            test_extract(stack, expected)
+        })
+
+        describe('test has period + NO space in first 75 characters and colon + space in first 100 characters', () => {
+            let expected = 'Error while building type PS.Redis.RedisSession'
+            let stack = expected + ': Unable to connect to the Redis database'
+            test_extract(stack, expected)
         })
     })
 })

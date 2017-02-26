@@ -51,7 +51,7 @@ function handle_uncaught_or_inner_exception(stack) {
     stack_minus_first_block = remove_first_statement(stack, ':')
     stack_minus_second_block = remove_first_statement(stack_minus_first_block, ':')
     third_block = extract_first_statement(stack_minus_second_block, ';')
-    return extract_short_error(third_block)
+    return extract_short_error(third_block, ' ')
 }
 
 function handle_corporate_subscription(stack) {
@@ -62,27 +62,31 @@ function handle_corporate_subscription(stack) {
     return 'User has a corporate subscription'
 }
 
-function extract_short_error(stack) {
+function extract_short_error(stack, space) {
     if (stack === undefined || stack === '') {
         return ''
     }
 
     var index = stack.length > 100 ? 100 : stack.length
 
-    if (stack.substring(0, index).includes('. ')) {
-        stack = extract_first_statement(stack, '. ')
+    if (stack.substring(0, index).includes('.' + space)) {
+        stack = extract_first_statement(stack, '.' + space)
     }
 
-    if (stack.substring(0, index).includes(': ')) {
-        stack = extract_first_statement(stack, ': ')
+    if (stack.substring(0, index).includes(':' + space)) {
+        stack = extract_first_statement(stack, ':' + space)
     }
 
-    if (stack.substring(0, index).includes('; ')) {
-        stack = extract_first_statement(stack, '; ')
+    if (stack.substring(0, index).includes(';' + space)) {
+        stack = extract_first_statement(stack, ';' + space)
     }
 
-    if (stack.substring(0, index).includes(', ')) {
-        stack = extract_first_statement(stack, ', ')
+    if (stack.substring(0, index).includes(',' + space)) {
+        stack = extract_first_statement(stack, ',' + space)
+    }
+
+    if (stack.length > 75) {
+        stack = extract_short_error(stack, '')
     }
 
     return stack
