@@ -1,9 +1,28 @@
 module.exports = {
+    execute: execute,
     parse: parse,
     extract_code_block: extract_code_block,
     extract_headers_and_stack: extract_headers_and_stack
 }
+
+var stack_parser = require('./stack_parser')
+var distinct_error_aggregator = require('./distinct_error_aggregator')
+var plotly_plotter = require('./plotly_plotter')
 const consts = require('../src/consts')
+
+function execute(messages) {
+    var parsed_messages = parse(messages)
+    var header_and_stack_list = []
+    parsed_messages.forEach(function(parsed_message) {
+        var code_block = extract_code_block(parsed_message)
+        var header_and_stack = extract_headers_and_stack(code_block)
+        header_and_stack.stack = stack_parser.parse(header_and_stack.stack)
+        header_and_stack_list.push(header_and_stack)
+    }, this)
+
+    var distinct_list = distinct_error_aggregator.aggregate_distinct_errors(header_and_stack_list)
+    plotly_plotter.prepare_plot(distinct_list)
+}
 
 function parse(messages) {
     var result = []
