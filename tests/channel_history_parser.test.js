@@ -92,7 +92,7 @@ describe('channel_history_parser', function () {
 
     describe('extract_headers_and_stack', function () {
         let test_extract_headers_and_stack = (code_string, expected) => {
-            it('should return ' + expected + ' when given ' + code_string, () => {
+            it('should return ' + JSON.stringify(expected) + ' when given ' + code_string, () => {
                 let result = channel_history_parser.extract_headers_and_stack(code_string)
                 assert.deepEqual(result, expected)
             })
@@ -106,23 +106,23 @@ describe('channel_history_parser', function () {
 
         describe('test extracting headers and stack', () => {
             let code_string = '[asdf] test'
-            let expected = [{ timestamp: 'asdf', log_level: '', code_class: '', project: '', stack: '' }]
+            let expected = { timestamp: 'asdf', log_level: '', code_class: '', project: '', stack: '' }
             test_extract_headers_and_stack(code_string, expected)
 
             code_string = '[asdf] [test] '
-            expected = [{ timestamp: 'asdf', log_level: 'test', code_class: '', project: '', stack: '' }]
+            expected = { timestamp: 'asdf', log_level: 'test', code_class: '', project: '', stack: '' }
             test_extract_headers_and_stack(code_string, expected)
 
             code_string = '[asdf] [test] [zxcv] '
-            expected = [{ timestamp: 'asdf', log_level: 'test', code_class: 'zxcv', project: '', stack: '' }]
+            expected = { timestamp: 'asdf', log_level: 'test', code_class: 'zxcv', project: '', stack: '' }
             test_extract_headers_and_stack(code_string, expected)
 
             code_string = '[asdf] [test] [zxcv] [qwerty] '
-            expected = [{ timestamp: 'asdf', log_level: 'test', code_class: 'zxcv', project: 'qwerty', stack: '' }]
+            expected = { timestamp: 'asdf', log_level: 'test', code_class: 'zxcv', project: 'qwerty', stack: '' }
             test_extract_headers_and_stack(code_string, expected)
 
             code_string = '[asdf] [test] [zxcv] [qwerty] 123'
-            expected = [{ timestamp: 'asdf', log_level: 'test', code_class: 'zxcv', project: 'qwerty', stack: '123' }]
+            expected = { timestamp: 'asdf', log_level: 'test', code_class: 'zxcv', project: 'qwerty', stack: '123' }
             test_extract_headers_and_stack(code_string, expected)
         })
     })
