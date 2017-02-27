@@ -24,6 +24,13 @@ controller.hears(['count'], 'direct_message,direct_mention,mention', function(bo
     parse_channel_history()
 })
 
+setInterval(function() {
+    var now = new Date()
+    if (now.getHours() === 9 && now.getMinutes() === 15 && now.getDay() !== 'Sunday' && now.getDay !== 'Saturday') {
+        parse_channel_history()
+    }
+}, 60000)
+
 function parse_channel_history() {
     var now = new Date()
     var now_in_milli = (now.getTime())/1000
