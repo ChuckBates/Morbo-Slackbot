@@ -33,6 +33,8 @@ var bot = controller.spawn({
 controller.storage.channels.get(consts.nanAlertChannelId, function(err, json) { 
     if (json !== undefined && json.data.interval !== undefined) {
         default_interval = json.data.interval
+        default_hour = json.data.hour
+        default_minute = json.data.minute
     }
 })
 
@@ -106,7 +108,7 @@ controller.hears(['set time (.*)'], 'direct_message,direct_mention,mention', fun
 
 setInterval(function() {
     var now = new Date()
-    if (now.getHours() === 9 && now.getMinutes() === 15 && now.getDay() !== 'Sunday' && now.getDay !== 'Saturday') {
+    if (now.getHours() === default_hour && now.getMinutes() === default_minute && now.getDay() !== 'Sunday' && now.getDay !== 'Saturday') {
         parse_channel_history()
     }
 }, 60000)
