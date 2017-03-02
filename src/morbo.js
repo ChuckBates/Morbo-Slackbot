@@ -9,7 +9,8 @@ module.exports = {
     get_data_to_save: get_data_to_save,
     set_interval: set_interval,
     set_hour: set_hour,
-    set_minute: set_minute
+    set_minute: set_minute,
+    check_valid_number: check_valid_number
 }
 
 var Botkit = require('../lib/Botkit.js')
@@ -44,8 +45,7 @@ controller.hears(['count'], 'direct_message,direct_mention,mention', function(bo
 
 controller.hears(['set days (.*)'], 'direct_message,direct_mention,mention', function(bot, message) {
     var days = parseInt(message.match[1])
-    if (isNaN(days)) {
-        bot.reply(message, 'Morbo will punish little humans for this! Insulting to Morbo to think ' + message.match[1] + ' is a number!')
+    if (check_valid_number(bot, message, days)) {
         return
     }
 
@@ -130,7 +130,7 @@ function post_message(message) {
     })
 }
 
-function check_valid_number(bot, value) {
+function check_valid_number(bot, message, value) {
     if (isNaN(value)) {
         bot.reply(message, 'Morbo will punish little humans for this! Insulting to Morbo to think ' + value + ' is a number!')
         return false

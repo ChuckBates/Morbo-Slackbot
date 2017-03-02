@@ -3,6 +3,9 @@
 const assert = require('assert')
 const morbo = require('../src/morbo')
 
+var simple_mock = require('simple-mock')
+var Botkit = require('../lib/Botkit.js')
+
 describe('morbo', function() {
     describe('get_data_to_save', function() {
         let test_get_data_to_save = (json, days, hour, minute, expected) => {
@@ -115,6 +118,36 @@ describe('morbo', function() {
             }
             test_get_data_to_save(json, days, hour, undefined, expected)
             test_get_data_to_save(json, days, hour, '', expected)
+        })
+    })
+
+    describe('check_valid_number', function() {
+        let test_check_valid_number = (bot, message, value, expected) => {
+            it('should return ' + expected + ' when given ' + value, () => {
+                simple_mock.mock(bot, 'reply').callFn(function() {})
+                let result = morbo.check_valid_number(bot, message, value)
+                assert.equal(result, expected)
+            })
+        }
+
+        describe('test undefined', () => {
+            let bot = Botkit.slackbot({})
+            let message = ''
+            let value = undefined
+            test_check_valid_number(bot, message, value, false)
+        })
+
+        describe('test not NaN', () => {
+            let bot = Botkit.slackbot({})
+            let message = ''
+            let value = 4
+            test_check_valid_number(bot, message, value, true)
+        })
+
+        describe('test is NaN', () => {
+            let bot = Botkit.slackbot({})
+            let message = ''
+            test_check_valid_number(bot, message, NaN, false)
         })
     })
 })
