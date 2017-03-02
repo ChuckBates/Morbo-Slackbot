@@ -149,5 +149,7 @@ describe('morbo', function() {
             let message = ''
             test_check_valid_number(bot, message, NaN, false)
         })
+
+        simple_mock.restore();
     })
 })
