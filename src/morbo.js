@@ -22,7 +22,7 @@ var controller = Botkit.slackbot({
 })
 
 var bot = controller.spawn({
-    token: 'xoxb-142124192757-T1YhzWRUGLMl8zuITltXmwnf'
+    token: 'xoxb-142124192757-vCae3E93BkPHLojEYEQzjU5U'
 }).startRTM()
 
 controller.storage.channels.get(consts.nanAlertChannelId, function(err, json) { 
