@@ -12,10 +12,9 @@ var Botkit = require('../lib/Botkit.js')
 var os = require('os')
 var channel_history_parser = require('./channel_history_parser.js')
 var consts = require('./consts.js')
+var commands = require('./commands.js')
 
 var default_interval = 7;
-var default_hour = 9;
-var default_minute = 15;
 
 var controller = Botkit.slackbot({
     stats_output: true,
@@ -26,16 +25,14 @@ var bot = controller.spawn({
     token: 'xoxb-142124192757-vCae3E93BkPHLojEYEQzjU5U'
 }).startRTM()
 
+commands.initialize(controller, bot)
+
 controller.storage.channels.get(consts.nanAlertChannelId, function(err, json) { 
     if (json !== undefined && json.data.interval !== undefined) {
         default_interval = json.data.interval
         default_hour = json.data.hour
         default_minute = json.data.minute
     }
-})
-
-controller.hears(['count'], 'direct_message,direct_mention,mention', function(bot, message) {    
-    parse_channel_history()
 })
 
 controller.hears(['set days (.*)'], 'direct_message,direct_mention,mention', function(bot, message) {
@@ -100,22 +97,6 @@ controller.hears(['set time (.*)'], 'direct_message,direct_mention,mention', fun
     default_minute = new_minute
     bot.reply(message, 'Morbo cares not about small human numbers with invasion soon, will set to pacify the vermin!')
 })
-
-setInterval(function() {
-    var now = new Date()
-    if (now.getHours() === default_hour && now.getMinutes() === default_minute && now.getDay() !== 'Sunday' && now.getDay !== 'Saturday') {
-        parse_channel_history()
-    }
-}, 60000)
-
-function parse_channel_history() {
-    var now = new Date()
-    var now_in_milli = (now.getTime())/1000
-    var week_ago_in_milli = (now.setDate(now.getDate() - default_interval)) / 1000
-    bot.api.channels.history({channel: consts.nan_alert_channel_id, latest: now_in_milli, oldest: week_ago_in_milli}, function (err, res) {        
-        channel_history_parser.execute(res.messages)
-    })
-}
 
 function post_message(message) {
     bot.api.chat.postMessage(message, function(err, res) {
