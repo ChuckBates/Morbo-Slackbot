@@ -30,7 +30,11 @@
     "mocha": "^3.2.0",
     "should": "^8.0.2",
     "winston": "^2.1.1",
+<<<<<<< HEAD
     "simple-mock": "^0.7.3"
+=======
+    "plotly": "^1.0.6"
+>>>>>>> 26d0ca649f6b0f3952646a70dd031246494ccd75
   },
   "scripts": {
     "pretest": "jscs ./lib/",

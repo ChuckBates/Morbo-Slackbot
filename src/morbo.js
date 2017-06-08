@@ -1,8 +1,3 @@
-if (!process.env.token) {
-    console.log('Error: Specify token in environment')
-    process.exit(1)
-}
-
 module.exports = {
     post_message: post_message,
     get_interval: get_interval,
@@ -28,7 +23,7 @@ var controller = Botkit.slackbot({
 })
 
 var bot = controller.spawn({
-    token: process.env.token
+    token: 'xoxb-142124192757-vCae3E93BkPHLojEYEQzjU5U'
 }).startRTM()
 
 controller.storage.channels.get(consts.nanAlertChannelId, function(err, json) { 
