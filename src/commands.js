@@ -2,7 +2,7 @@ var channel_history_parser = require('./channel_history_parser.js')
 var consts = require('./consts.js')
 
 exports.initialize = function (controller, bot) {    
-    setInterval(function() {get_channel_history_if_time}, 60000)
+    setInterval(function() {get_channel_history_if_time(bot)}, 60000)
     listen_for_count(controller)
 }
 
