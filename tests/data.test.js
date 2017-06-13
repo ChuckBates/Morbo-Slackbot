@@ -1,17 +1,18 @@
 "use strict";
 
 const assert = require('assert')
-const morbo = require('../src/morbo')
+const data = require('../src/data')
 
+var consts = require('../src/consts')
 var simple_mock = require('simple-mock')
 var Botkit = require('../lib/Botkit.js')
 
-describe('morbo', function() {
+describe('data', function() {
     describe('get_data_to_save', function() {
         let test_get_data_to_save = (json, days, hour, minute, expected) => {
             it('should return ' + JSON.stringify(expected) + ' when given ' + 
                 JSON.stringify(json) + ', ' + days + ', ' + hour + ', ' + minute, () => {
-                    let result = morbo.get_data_to_save(json, days, hour, minute)
+                    let result = data.get_data_to_save(json, days, hour, minute)
                     assert.deepEqual(result, expected)
             })
         }
@@ -76,7 +77,7 @@ describe('morbo', function() {
             let json = {
                 interval: 6
             }
-            morbo.set_interval(6)
+            consts.set_days(6)
             let hour = 1
             let minute = 1
             let expected = {
@@ -92,7 +93,7 @@ describe('morbo', function() {
             let json = {
                 hour: 6
             }
-            morbo.set_hour(6)
+            consts.set_hour(6)
             let days = 8
             let minute = 1
             let expected = {
@@ -108,7 +109,7 @@ describe('morbo', function() {
             let json = {
                 minute: 6
             }
-            morbo.set_minute(6)
+            consts.set_minute(6)
             let days = 8
             let hour = 1
             let expected = {
@@ -125,7 +126,7 @@ describe('morbo', function() {
         let test_check_valid_number = (bot, message, value, expected) => {
             it('should return ' + expected + ' when given ' + value, () => {
                 simple_mock.mock(bot, 'reply').callFn(function() {})
-                let result = morbo.check_valid_number(bot, message, value)
+                let result = data.check_valid_number(bot, message, value)
                 assert.equal(result, expected)
             })
         }

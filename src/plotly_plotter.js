@@ -21,7 +21,7 @@ function prepare_plot(distinct_list) {
     ]
 
     var layout = {
-        title: 'Top errors in the last ' + morbo.get_interval() + ' days',
+        title: 'Top errors in the last ' + consts.get_days() + ' days',
         font: {family: "Raleway, sans-serif"},
         showlegend: false,        
         autosize: false,
