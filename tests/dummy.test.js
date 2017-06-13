@@ -8,24 +8,24 @@ var simple_mock = require('simple-mock')
 // When both tests are run they pass, but when the first is commented out like below, the second fails.
 
 describe('dummy', function() {
-    // describe('get', function() {
-    //     let test_get = (expected, condition) => {
-    //         it('should return ' + JSON.stringify(expected) + ' when ' + condition, () => {
-    //             simple_mock.mock(dummy, 'get').returnWith(expected)
-    //             let result = dummy.get()
-    //             assert.equal(result, expected)
-    //         })
-    //     }
+    describe('get', function() {
+        let test_get = (expected, condition) => {
+            it('should return ' + JSON.stringify(expected) + ' when ' + condition, () => {
+                simple_mock.mock(dummy, 'get').returnWith(expected)
+                let result = dummy.get()
+                assert.equal(result, expected)
+            })
+        }
 
-    //     describe('test', () => {
-    //         let expected = {
-    //             data: 'good'
-    //         }
-    //         test_get(expected, 'mocking \'get\'')
-    //     })
+        describe('test', () => {
+            let expected = {
+                data: 'good'
+            }
+            test_get(expected, 'mocking \'get\'')
+        })
 
-    //     simple_mock.restore()
-    // })
+        simple_mock.restore()
+    })
 
     describe('getInner', function() {
         let test_get_inner = (expected, condition) => {
