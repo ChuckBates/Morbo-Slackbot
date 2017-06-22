@@ -5,8 +5,6 @@ const dummy = require('../src/dummy')
 
 var simple_mock = require('simple-mock')
 
-// When both tests are run they pass, but when the first is commented out like below, the second fails.
-
 describe('dummy', function() {
     describe('get', function() {
         let test_get = (expected, condition) => {
