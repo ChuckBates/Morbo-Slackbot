@@ -4,8 +4,6 @@ module.exports = {
 
 var Botkit = require('../lib/Botkit.js')
 var os = require('os')
-var channel_history_parser = require('./channel_history_parser.js')
-var consts = require('./consts.js')
 var commands = require('./commands.js')
 var data = require('./data.js')
 
