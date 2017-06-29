@@ -6,6 +6,7 @@ var Botkit = require('../lib/Botkit.js')
 var os = require('os')
 var commands = require('./commands.js')
 var data = require('./data.js')
+var slackConfig = require('../slack.config.json')
 
 var controller = Botkit.slackbot({
     stats_output: true,
@@ -13,7 +14,7 @@ var controller = Botkit.slackbot({
 })
 
 var bot = controller.spawn({
-    token: 'xoxb-142124192757-vCae3E93BkPHLojEYEQzjU5U'
+    token: slackConfig.apiToken
 }).startRTM()
 
 data.load(controller.storage.channels)
