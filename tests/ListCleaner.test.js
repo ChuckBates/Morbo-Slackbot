@@ -44,25 +44,25 @@ describe('ListCleaner', function() {
             testClean(list, list)
         })
 
-        describe('when the list has one with a single unclean char', () => {
+        describe('when the list has one with a single URL encoded char', () => {
             let list = [ { header_and_stack: { stack: 'error%3Eerror' } } ]
             let expected = [ { header_and_stack: { stack: 'error>error' } } ]
             testClean(list, expected)
         })
 
-        describe('when the list has one with several unclean chars', () => {
+        describe('when the list has one with several URL encoded chars', () => {
             let list = [ { header_and_stack: { stack: 'error%3C%24%3Eerror' } } ]
             let expected = [ { header_and_stack: { stack: 'error<$>error' } } ]
             testClean(list, expected)
         })
 
-        describe('when the list has one with several unclean chars and spaces', () => {
+        describe('when the list has one with several URL encoded chars and spaces', () => {
             let list = [ { header_and_stack: { stack: 'error%20%3D%3D%3E%20error' } } ]
             let expected = [ { header_and_stack: { stack: 'error ==> error' } } ]
             testClean(list, expected)
         })
 
-        describe('when the list has multiple with unclean chars', () => {
+        describe('when the list has multiple with URL encoded chars', () => {
             let list = [ 
                 { header_and_stack: { stack: 'error%20%3D%3D%3E%20error' } },
                 { header_and_stack: { stack: 'error%3D%3D%3Eerror' } }
@@ -71,6 +71,12 @@ describe('ListCleaner', function() {
                 { header_and_stack: { stack: 'error ==> error' } },
                 { header_and_stack: { stack: 'error==>error' } }
             ]
+            testClean(list, expected)
+        })
+
+        describe('when the list has one with html encoded entity', () => {
+            let list = [ { header_and_stack: { stack: 'Error creating user ---&gt' } } ]
+            let expected = [ { header_and_stack: { stack: 'Error creating user --->' } } ]
             testClean(list, expected)
         })
     })
