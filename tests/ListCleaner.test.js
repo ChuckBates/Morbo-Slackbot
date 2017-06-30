@@ -46,19 +46,19 @@ describe('ListCleaner', function() {
 
         describe('when the list has one with a single URL encoded char', () => {
             let list = [ { header_and_stack: { stack: 'error%3Eerror' } } ]
-            let expected = [ { header_and_stack: { stack: 'error>error' } } ]
+            let expected = [ { header_and_stack: { stack: 'error>error \(URL decoded\)' } } ]
             testClean(list, expected)
         })
 
         describe('when the list has one with several URL encoded chars', () => {
             let list = [ { header_and_stack: { stack: 'error%3C%24%3Eerror' } } ]
-            let expected = [ { header_and_stack: { stack: 'error<$>error' } } ]
+            let expected = [ { header_and_stack: { stack: 'error<$>error \(URL decoded\)' } } ]
             testClean(list, expected)
         })
 
         describe('when the list has one with several URL encoded chars and spaces', () => {
             let list = [ { header_and_stack: { stack: 'error%20%3D%3D%3E%20error' } } ]
-            let expected = [ { header_and_stack: { stack: 'error ==> error' } } ]
+            let expected = [ { header_and_stack: { stack: 'error ==> error \(URL decoded\)' } } ]
             testClean(list, expected)
         })
 
@@ -68,15 +68,21 @@ describe('ListCleaner', function() {
                 { header_and_stack: { stack: 'error%3D%3D%3Eerror' } }
             ]
             let expected = [ 
-                { header_and_stack: { stack: 'error ==> error' } },
-                { header_and_stack: { stack: 'error==>error' } }
+                { header_and_stack: { stack: 'error ==> error \(URL decoded\)' } },
+                { header_and_stack: { stack: 'error==>error \(URL decoded\)' } }
             ]
             testClean(list, expected)
         })
 
         describe('when the list has one with html encoded entity', () => {
             let list = [ { header_and_stack: { stack: 'Error creating user ---&gt' } } ]
-            let expected = [ { header_and_stack: { stack: 'Error creating user --->' } } ]
+            let expected = [ { header_and_stack: { stack: 'Error creating user ---> \(HTML decoded\)' } } ]
+            testClean(list, expected)
+        })
+
+        describe('when the list has one with html encoded entity and URL encoded chars', () => {
+            let list = [ { header_and_stack: { stack: 'Error crea%3Eting user ---&gt;' } } ]
+            let expected = [ { header_and_stack: { stack: 'Error crea>ting user ---> \(URL decoded\) \(HTML decoded\)' } } ]
             testClean(list, expected)
         })
     })

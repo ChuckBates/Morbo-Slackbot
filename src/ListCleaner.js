@@ -8,6 +8,9 @@ function clean(list) {
         list.forEach(function(element) {
             var stack = element.header_and_stack.stack
             if (stack != undefined && stack.length > 0) {
+                if (stack.match(regEx)) {
+                    stack = stack + ' \(URL decoded\)'
+                }
                 element.header_and_stack.stack = cleanHtml(decodeURIComponent(stack))
             }
         }, this);
@@ -23,8 +26,15 @@ function cleanHtml(stack) {
         ['gt', '>']
     ];
 
+    var regEx1 = /(&['amp','apos','lt','gt'])/
+    var regEx2 = /(&['amp','apos','lt','gt'];)/
+    if (stack.match(regEx1) || stack.match(regEx2)) {
+        stack = stack + ' \(HTML decoded\)'
+    }
+
     htmlMap.forEach(function(map){
-        stack = stack.replace(new RegExp('&' + map[0], 'g'), map[1]);
+        stack = stack.replace(new RegExp('&' + map[0] + ';', 'g'), map[1])
+        stack = stack.replace(new RegExp('&' + map[0], 'g'), map[1])
     });
 
     return stack
