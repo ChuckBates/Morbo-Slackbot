@@ -14,8 +14,8 @@ describe('plotly integration', function() {
     describe('round trip plot', function() {
         let testPlotRoundTrip = (x_values, y_values) => {
             it('should round trip plot when given x: ' + x_values + ' and y: ' + y_values, function(done) {
-                this.timeout(30000);
-                setTimeout(done, 30000);
+                this.timeout(45000);
+                setTimeout(done, 45000);
                 
                 roundTripPlot(x_values, y_values, done)               
             })
