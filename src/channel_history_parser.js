@@ -8,6 +8,7 @@ module.exports = {
 var stack_parser = require('./stack_parser')
 var distinct_error_aggregator = require('./distinct_error_aggregator')
 var plotly_plotter = require('./plotly_plotter')
+var listCleaner = require('./ListCleaner')
 const consts = require('../src/consts')
 
 function execute(messages) {
@@ -21,7 +22,7 @@ function execute(messages) {
     }, this)
 
     var distinct_list = distinct_error_aggregator.aggregate_distinct_errors(header_and_stack_list)
-    plotly_plotter.prepare_plot(distinct_list)
+    plotly_plotter.prepare_plot(listCleaner.clean(distinct_list))
 }
 
 function parse(messages) {
