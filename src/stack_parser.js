@@ -4,7 +4,8 @@ module.exports = {
     remove_first_statement: remove_first_statement,
     handle_uncaught_or_inner_exception: handle_uncaught_or_inner_exception,
     handle_corporate_subscription: handle_corporate_subscription,
-    extract_short_error: extract_short_error
+    extract_short_error: extract_short_error,
+    stack_has_more_separators: stack_has_more_separators
 }
 
 function parse(stack) {
@@ -16,6 +17,8 @@ function parse(stack) {
     if (first_statement.startsWith('Inner exception') || first_statement.startsWith('Uncaught exception')) {
         return handle_uncaught_or_inner_exception(stack)
     }
+
+    return first_statement !== '' ? first_statement : 'Unknown Error (Unable to parse)'
 }
 
 function extract_first_statement(stack, separator) {
@@ -85,9 +88,24 @@ function extract_short_error(stack, space) {
         stack = extract_first_statement(stack, ',' + space)
     }
 
-    if (stack.length > 75) {
+    if (stack.length > 75 && stack_has_more_separators(stack, '')) {
         stack = extract_short_error(stack, '')
     }
 
+    if (stack.length > 75) {
+        stack = stack.slice(0, 60) + '...'
+    }
     return stack
+}
+
+function stack_has_more_separators(stack, space) {
+    if (stack === undefined || stack === '') {
+        return false
+    }
+
+    if (stack.includes(':' + space) || stack.includes(',' + space) || stack.includes(';' + space) || stack.includes('.' + space)) {
+        return true
+    }
+
+    return false
 }

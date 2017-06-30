@@ -6,7 +6,7 @@ const stack_parser = require('../src/stack_parser')
 describe('stack_parser', function() {
     describe('parse', function() {
         let test_parse = (stack, expected) => {
-            it('shoule return ' + expected + ' when given ' + stack, () => {
+            it('should return ' + expected + ' when given ' + stack, () => {
                 let result = stack_parser.parse(stack)
                 assert.equal(result, expected)
             })
@@ -185,6 +185,50 @@ describe('stack_parser', function() {
             let expected = 'Error while building type PS.Redis.RedisSession'
             let stack = expected + ': Unable to connect to the Redis database'
             test_extract(stack, expected)
+        })
+
+        describe('test has period + space and size is > 75', () => {
+            let expected = 'The view \'Index\' or its master was not found or no view engine supports the searched locations'
+            let stack = expected + ". The following locations were searched:"
+            test_extract(stack, expected)
+        })
+    })
+
+    describe('stack_has_more_separators', function() {
+        let test_for_more_separators = (stack, space, expected) => {
+            it('should return ' + expected + ' when given stack \'' + stack + space + '\'', () => {
+                let result = stack_parser.stack_has_more_separators(stack, space)
+                assert.equal(result, expected)
+            })
+        }
+
+        describe('test undefined/empty', () => {
+            test_for_more_separators(undefined, '', false)
+            test_for_more_separators('', '', false)
+        })
+
+        describe('test text with single colon separator', () => {
+            test_for_more_separators('asdf: ', ' ', true)
+        })
+
+        describe('test text with single comma separator', () => {
+            test_for_more_separators('asdf, ', ' ', true)
+        })
+
+        describe('test text with single semi-colon separator', () => {
+            test_for_more_separators('asdf; ', ' ', true)
+        })
+
+        describe('test text with single period separator', () => {
+            test_for_more_separators('asdf. ', ' ', true)
+        })
+
+        describe('test text with multiple separators', () => {
+            test_for_more_separators('just; a, single: test.', ' ', true)
+        })
+
+        describe('test text with no space after separator', () => {
+            test_for_more_separators('test:foo;bar', '', true)
         })
     })
 })
