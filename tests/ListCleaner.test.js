@@ -36,6 +36,14 @@ describe('ListCleaner', function() {
             testClean(list, list)
         })
 
+        describe('when the list has one with an undefined/empty stack', () => {
+            let list = [ { header_and_stack: { stack: undefined } } ]
+            testClean(list, list)
+
+            list = [ { header_and_stack: { stack: '' } } ]
+            testClean(list, list)
+        })
+
         describe('when the list has one with a single unclean char', () => {
             let list = [ { header_and_stack: { stack: 'error%3Eerror' } } ]
             let expected = [ { header_and_stack: { stack: 'error>error' } } ]

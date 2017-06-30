@@ -7,7 +7,7 @@ function clean(list) {
     if (list != undefined && list.length > 0) {
         list.forEach(function(element) {
             var stack = element.header_and_stack.stack
-            if (stack.match(regEx)) {
+            if (stack != undefined && stack.length > 0 && stack.match(regEx)) {
                 element.header_and_stack.stack = decodeURIComponent(stack)
             }
         }, this);
