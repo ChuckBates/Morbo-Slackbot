@@ -190,6 +190,7 @@ describe('stack_parser', function() {
         describe('test has period + space and size is > 75', () => {
             let expected = 'The view \'Index\' or its master was not found or no view engine supports the searched locations'
             let stack = expected + ". The following locations were searched:"
+            expected = expected.slice(0, 60) + '...'
             test_extract(stack, expected)
         })
     })
