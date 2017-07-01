@@ -5,7 +5,8 @@ module.exports = {
 
 var morbo = require('./morbo.js')
 var consts = require('./consts.js')
-var plotly = require('plotly')("chuck-bates", "R3y8X5BnFCXR2jYSslAZ")
+var plotlyConfig = require('../plotly.config.json')
+var plotly = require('plotly')(plotlyConfig.user, plotlyConfig.password)
 
 function preparePlot(distinctList) {
     var values = extractValues(distinctList)
