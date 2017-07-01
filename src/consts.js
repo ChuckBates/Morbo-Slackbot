@@ -1,39 +1,39 @@
 module.exports = {
-    get_days: get_days,
-    get_hour: get_hour,
-    get_minute: get_minute,
-    set_days: set_days,
-    set_hour: set_hour,
-    set_minute: set_minute,
-    nan_alert_channel_id: 'C3CKXGJG4', 
-    bot_testing_channel_id: 'G2FFZP1T4',
-    es_alert_bot_id: 'B04HH385S'
+    getDays: getDays,
+    getHour: getHour,
+    getMinute: getMinute,
+    setDays: setDays,
+    setHour: setHour,
+    setMinute: setMinute,
+    nanAlertChannelId: 'C3CKXGJG4', 
+    botTestingChannelId: 'G2FFZP1T4',
+    esAlertBotId: 'B04HH385S'
 }
 
-var default_days = 7;
-var default_hour = 9;
-var default_minute = 15;
+var defaultDays = 7;
+var defaultHour = 9;
+var defaultMinute = 15;
 
-function get_days() {
-    return default_days
+function getDays() {
+    return defaultDays
 }
 
-function get_hour() {
-    return default_hour
+function getHour() {
+    return defaultHour
 }
 
-function get_minute() {
-    return default_minute
+function getMinute() {
+    return defaultMinute
 }
 
-function set_days(days) {
-    default_days = days
+function setDays(days) {
+    defaultDays = days
 }
 
-function set_hour(hour) {
-    default_hour = hour
+function setHour(hour) {
+    defaultHour = hour
 }
 
-function set_minute(minute) {
-    default_minute = minute
+function setMinute(minute) {
+    defaultMinute = minute
 }

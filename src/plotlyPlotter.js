@@ -1,19 +1,19 @@
 module.exports = {
-    prepare_plot: prepare_plot,
-    extract_x_y_values: extract_x_y_values
+    preparePlot: preparePlot,
+    extractValues: extractValues
 }
 
 var morbo = require('./morbo.js')
 var consts = require('./consts.js')
 var plotly = require('plotly')("chuck-bates", "R3y8X5BnFCXR2jYSslAZ")
 
-function prepare_plot(distinct_list) {
-    var xy = extract_x_y_values(distinct_list)
+function preparePlot(distinctList) {
+    var values = extractValues(distinctList)
 
     var data = [
         {
-            x: xy.x_values,
-            y: xy.y_values,
+            x: values.xValues,
+            y: values.yValues,
             marker: {color: 'rgb(0,166,82)'},
             orientation: 'h',
             type: "bar"
@@ -21,7 +21,7 @@ function prepare_plot(distinct_list) {
     ]
 
     var layout = {
-        title: 'Top errors in the last ' + consts.get_days() + ' days',
+        title: 'Top errors in the last ' + consts.getDays() + ' days',
         font: {family: "Raleway, sans-serif"},
         showlegend: false,        
         autosize: false,
@@ -49,29 +49,29 @@ function prepare_plot(distinct_list) {
         if (err) {
             console.log(err)
         }
-        post_graph(msg.url)
+        postGraph(msg.url)
     })
 }
 
-function extract_x_y_values(distinct_list) {
-    if (distinct_list === undefined || JSON.stringify(distinct_list) === JSON.stringify([])) {
+function extractValues(distinctList) {
+    if (distinctList === undefined || JSON.stringify(distinctList) === JSON.stringify([])) {
         return []
     }
 
-    var x_values = []
-    var y_values = []
+    var xValues = []
+    var yValues = []
 
-    for (var i = 0; i < distinct_list.length; i++) {
-        x_values.push(distinct_list[i].count)
-        y_values.push(distinct_list[i].header_and_stack.stack)
+    for (var i = 0; i < distinctList.length; i++) {
+        xValues.push(distinctList[i].count)
+        yValues.push(distinctList[i].headerAndStack.stack)
     }
 
-    return {x_values: x_values, y_values: y_values}
+    return {xValues: xValues, yValues: yValues}
 }
 
-function post_graph(url) {
+function postGraph(url) {
     var message = { 
-        channel: consts.bot_testing_channel_id, 
+        channel: consts.botTestingChannelId, 
         username: 'Morbo',
         as_user: false,
         icon_emoji: ':morbo:',
@@ -87,5 +87,5 @@ function post_graph(url) {
         ]
     }
 
-    morbo.post_message(message)
+    morbo.postMessage(message)
 }

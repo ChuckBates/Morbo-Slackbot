@@ -1,7 +1,7 @@
 "use strict";
 
 const assert = require('assert')
-const plotly_plotter = require('../src/plotly_plotter')
+const plotly_plotter = require('../src/plotlyPlotter')
 const plotlyConfig = require('../plotly.config.json')
 const plotly = require('plotly')(plotlyConfig.integrationUser, plotlyConfig.integrationPassword)
 
@@ -12,39 +12,39 @@ var user = plotlyConfig.integrationUser
 
 describe('plotly integration', function() {
     describe('round trip plot', function() {
-        let testPlotRoundTrip = (x_values, y_values) => {
-            it('should round trip plot when given x: ' + x_values + ' and y: ' + y_values, function(done) {
+        let testPlotRoundTrip = (xValues, yValues) => {
+            it('should round trip plot when given x: ' + xValues + ' and y: ' + yValues, function(done) {
                 this.timeout(45000);
                 setTimeout(done, 45000);
                 
-                roundTripPlot(x_values, y_values, done)               
+                roundTripPlot(xValues, yValues, done)               
             })
         }
 
         describe('test single value', () => {
-            let x_values = [1]
-            let y_values = ['test']
-            testPlotRoundTrip(x_values, y_values)
+            let xValues = [1]
+            let yValues = ['test']
+            testPlotRoundTrip(xValues, yValues)
         })
 
         describe('test two values', () => {
-            let x_values = [2,1]
-            let y_values = ['test1', 'test2']
-            testPlotRoundTrip(x_values, y_values)
+            let xValues = [2,1]
+            let yValues = ['test1', 'test2']
+            testPlotRoundTrip(xValues, yValues)
         })
 
         describe('test one empty value', () => {
-            let x_values = [2,1,3]
-            let y_values = ['test1', '', 'test2']
-            testPlotRoundTrip(x_values, y_values)
+            let xValues = [2,1,3]
+            let yValues = ['test1', '', 'test2']
+            testPlotRoundTrip(xValues, yValues)
         })
     })
 })
 
-function buildData(x_values, y_values) {
+function buildData(xValues, yValues) {
     return [{
-        x: x_values,
-        y: y_values,
+        x: xValues,
+        y: yValues,
         marker: {color: 'rgb(0,166,82)'},
         orientation: 'h',
         type: "bar"
@@ -78,9 +78,9 @@ function buildLayout() {
     }
 }
 
-function roundTripPlot(x_values, y_values, done) {
+function roundTripPlot(xValues, yValues, done) {
     let args = { headers: { "Plotly-Client-Platform": "javascript" }}
-    let data = buildData(x_values, y_values)
+    let data = buildData(xValues, yValues)
     let layout = buildLayout()
     let graphOptions = {layout: layout, filename: "integration_test", fileopt: "new"}
     plotly.plot(data, graphOptions, function (err, msg) {

@@ -6,12 +6,12 @@ function clean(list) {
     var regEx = /(%[A-F,0-9][A-F,0-9])/
     if (list != undefined && list.length > 0) {
         list.forEach(function(element) {
-            var stack = element.header_and_stack.stack
+            var stack = element.headerAndStack.stack
             if (stack != undefined && stack.length > 0) {
                 if (stack.match(regEx)) {
                     stack = stack + ' \(URL decoded\)'
                 }
-                element.header_and_stack.stack = cleanHtml(decodeURIComponent(stack))
+                element.headerAndStack.stack = cleanHtml(decodeURIComponent(stack))
             }
         }, this);
     }

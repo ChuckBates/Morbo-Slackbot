@@ -22,7 +22,7 @@ describe('Test', function() {
 });
 
 describe('Botkit', function() {
-    this.timeout(5000);
+    this.timeout(45000);
 
     it('should start and then stop', function(done) {
         var controller = Botkit.slackbot({debug: false});

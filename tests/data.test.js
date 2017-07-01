@@ -4,15 +4,15 @@ const assert = require('assert')
 const data = require('../src/data')
 
 var consts = require('../src/consts')
-var simple_mock = require('simple-mock')
-var Botkit = require('../lib/Botkit.js')
+var simpleMock = require('simple-mock')
+var botkit = require('../lib/Botkit')
 
 describe('data', function() {
-    describe('get_data_to_save', function() {
-        let test_get_data_to_save = (json, days, hour, minute, expected) => {
+    describe('getDataToSave', function() {
+        let testGetDataToSave = (json, days, hour, minute, expected) => {
             it('should return ' + JSON.stringify(expected) + ' when given ' + 
                 JSON.stringify(json) + ', ' + days + ', ' + hour + ', ' + minute, () => {
-                    let result = data.get_data_to_save(json, days, hour, minute)
+                    let result = data.getDataToSave(json, days, hour, minute)
                     assert.deepEqual(result, expected)
             })
         }
@@ -22,10 +22,10 @@ describe('data', function() {
             let days = 6
             let hour = 9
             let minute = 15
-            test_get_data_to_save(json, days, hour, minute, {interval:days, hour:hour, minute:minute})
+            testGetDataToSave(json, days, hour, minute, {interval:days, hour:hour, minute:minute})
 
             json = {}
-            test_get_data_to_save(json, days, hour, minute, {interval:days, hour:hour, minute:minute})
+            testGetDataToSave(json, days, hour, minute, {interval:days, hour:hour, minute:minute})
         })
 
         describe('test interval already stored then updated', () => {
@@ -40,7 +40,7 @@ describe('data', function() {
                 hour: hour,
                 minute: minute
             }
-            test_get_data_to_save(json, days, hour, minute, expected)
+            testGetDataToSave(json, days, hour, minute, expected)
         })
 
         describe('test hour already stored then updated', () => {
@@ -55,7 +55,7 @@ describe('data', function() {
                 hour: hour,
                 minute: minute
             }
-            test_get_data_to_save(json, days, hour, minute, expected)
+            testGetDataToSave(json, days, hour, minute, expected)
         })
 
         describe('test minute already stored then updated', () => {
@@ -70,14 +70,14 @@ describe('data', function() {
                 hour: hour,
                 minute: minute
             }
-            test_get_data_to_save(json, days, hour, minute, expected)
+            testGetDataToSave(json, days, hour, minute, expected)
         })
 
         describe('test interval already stored but not updated', () => {
             let json = {
                 interval: 6
             }
-            consts.set_days(6)
+            consts.setDays(6)
             let hour = 1
             let minute = 1
             let expected = {
@@ -85,15 +85,15 @@ describe('data', function() {
                 hour: hour,
                 minute: minute
             }
-            test_get_data_to_save(json, undefined, hour, minute, expected)
-            test_get_data_to_save(json, '', hour, minute, expected)
+            testGetDataToSave(json, undefined, hour, minute, expected)
+            testGetDataToSave(json, '', hour, minute, expected)
         })
 
         describe('test hour already stored but not updated', () => {
             let json = {
                 hour: 6
             }
-            consts.set_hour(6)
+            consts.setHour(6)
             let days = 8
             let minute = 1
             let expected = {
@@ -101,15 +101,15 @@ describe('data', function() {
                 hour: 6,
                 minute: minute
             }
-            test_get_data_to_save(json, days, undefined, minute, expected)
-            test_get_data_to_save(json, days, '', minute, expected)
+            testGetDataToSave(json, days, undefined, minute, expected)
+            testGetDataToSave(json, days, '', minute, expected)
         })
 
         describe('test minute already stored but not updated', () => {
             let json = {
                 minute: 6
             }
-            consts.set_minute(6)
+            consts.setMinute(6)
             let days = 8
             let hour = 1
             let expected = {
@@ -117,40 +117,40 @@ describe('data', function() {
                 hour: hour,
                 minute: 6
             }
-            test_get_data_to_save(json, days, hour, undefined, expected)
-            test_get_data_to_save(json, days, hour, '', expected)
+            testGetDataToSave(json, days, hour, undefined, expected)
+            testGetDataToSave(json, days, hour, '', expected)
         })
     })
 
-    describe('check_valid_number', function() {
-        let test_check_valid_number = (bot, message, value, expected) => {
+    describe('checkValidNumber', function() {
+        let testCheckValidNumber = (bot, message, value, expected) => {
             it('should return ' + expected + ' when given ' + value, () => {
-                simple_mock.mock(bot, 'reply').callFn(function() {})
-                let result = data.check_valid_number(bot, message, value)
+                simpleMock.mock(bot, 'reply').callFn(function() {})
+                let result = data.checkValidNumber(bot, message, value)
                 assert.equal(result, expected)
             })
         }
 
         describe('test undefined', () => {
-            let bot = Botkit.slackbot({})
+            let bot = botkit.slackbot({})
             let message = ''
             let value = undefined
-            test_check_valid_number(bot, message, value, false)
+            testCheckValidNumber(bot, message, value, false)
         })
 
         describe('test not NaN', () => {
-            let bot = Botkit.slackbot({})
+            let bot = botkit.slackbot({})
             let message = ''
             let value = 4
-            test_check_valid_number(bot, message, value, true)
+            testCheckValidNumber(bot, message, value, true)
         })
 
         describe('test is NaN', () => {
-            let bot = Botkit.slackbot({})
+            let bot = botkit.slackbot({})
             let message = ''
-            test_check_valid_number(bot, message, NaN, false)
+            testCheckValidNumber(bot, message, NaN, false)
         })
 
-        simple_mock.restore();
+        simpleMock.restore();
     })
 })
