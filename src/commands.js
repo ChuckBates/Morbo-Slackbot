@@ -5,13 +5,24 @@ var data = require('./data')
 var days = 0
 var hour = 0
 var minute = 0
+var bot
 
-exports.initialize = function (controller, bot) {  
-    setInterval(function() {getChannelHistoryIfTime(bot)}, 60000)
+exports.initialize = function (controller, slackBot) {  
+    setInterval(function() {getChannelHistoryIfTime(slackBot)}, 60000)
     listenForCount(controller)
     listenForSetDays(controller)
     listenForSetTime(controller)
     initializeTime()
+
+    bot = slackBot
+}
+
+exports.postMessage = function(message) {
+    bot.api.chat.postMessage(message, function(err, res) {
+        if (err) {
+            console.log(err)
+        }
+    })
 }
 
 function initializeTime() {

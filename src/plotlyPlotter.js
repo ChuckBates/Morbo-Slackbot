@@ -3,8 +3,8 @@ module.exports = {
     extractValues: extractValues
 }
 
-var morbo = require('./morbo.js')
 var consts = require('./consts.js')
+var commands = require('./commands.js')
 var plotlyConfig = require('../plotly.config.json')
 var plotly = require('plotly')(plotlyConfig.user, plotlyConfig.password)
 
@@ -88,5 +88,5 @@ function postGraph(url) {
         ]
     }
 
-    morbo.postMessage(message)
+    commands.postMessage(message)
 }

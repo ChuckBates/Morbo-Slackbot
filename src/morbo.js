@@ -1,7 +1,3 @@
-module.exports = {
-    postMessage: postMessage
-}
-
 var botkit = require('../lib/Botkit.js')
 var os = require('os')
 var commands = require('./commands.js')
@@ -19,11 +15,3 @@ var bot = controller.spawn({
 
 data.load(controller.storage.channels)
 commands.initialize(controller, bot)
-
-function postMessage(message) {
-    bot.api.chat.postMessage(message, function(err, res) {
-        if (err) {
-            console.log(err)
-        }
-    })
-}
