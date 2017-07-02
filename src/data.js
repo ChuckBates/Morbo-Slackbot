@@ -23,7 +23,6 @@ function getDataToSave(json, newDays, newHour, newMinute) {
 }
 
 function load(channels) {
-    //TODO: This appears to have broken some time ago, figure out and fix
     channels.get(consts.nanAlertChannelId, function(err, json) { 
         if (json !== undefined && json.data.interval !== undefined) {
             consts.setDays(json.data.interval)
