@@ -1,5 +1,4 @@
 var botkit = require('../lib/Botkit.js')
-var os = require('os')
 var commands = require('./commands.js')
 var data = require('./data.js')
 var slackConfig = require('../slack.config.json')
