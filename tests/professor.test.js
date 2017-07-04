@@ -52,7 +52,7 @@ describe('professor', function() {
                                 }
                             ]
                         }
-                    
+                    ]
                 },
                 code: 200,
                 message: 'success'
