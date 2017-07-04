@@ -1,6 +1,7 @@
 var botkit = require('../lib/Botkit.js')
 var commands = require('./commands.js')
 var data = require('./data.js')
+var listener = require('./listener')
 var slackConfig = require('../slack.config.json')
 
 var controller = botkit.slackbot({
@@ -14,3 +15,4 @@ var bot = controller.spawn({
 
 data.load(controller.storage.channels)
 commands.initialize(controller, bot)
+listener.start()
