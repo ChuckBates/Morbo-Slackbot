@@ -36,6 +36,7 @@
   "scripts": {
     "pretest": "jscs ./lib/",
     "test": "mocha tests/*.js",
+    "integrationTest": "mocha tests/integrationTests/*.js",
     "start": "node src/morbo"
   },
   "repository": {

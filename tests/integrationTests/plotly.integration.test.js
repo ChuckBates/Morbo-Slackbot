@@ -1,8 +1,8 @@
 "use strict";
 
 const assert = require('assert')
-const plotly_plotter = require('../src/plotlyPlotter')
-const plotlyConfig = require('../plotly.config.json')
+const plotly_plotter = require('../../src/plotlyPlotter')
+const plotlyConfig = require('../../plotly.config.json')
 const plotly = require('plotly')(plotlyConfig.integrationUser, plotlyConfig.integrationPassword)
 
 var Client = require('node-rest-client').Client
