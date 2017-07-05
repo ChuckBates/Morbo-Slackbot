@@ -6,7 +6,7 @@ var slackConfig = require('../slack.config.json')
 
 var controller = botkit.slackbot({
     stats_output: true,
-    json_file_store: 'C:/dev/SlackBots/morbo.v2/DataPersistence'
+    json_file_store: 'C:/dev/SlackBots/futurama/DataPersistence'
 })
 
 var bot = controller.spawn({

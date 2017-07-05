@@ -37,7 +37,7 @@
     "pretest": "jscs ./lib/",
     "test": "mocha tests/*.js",
     "integrationTest": "mocha tests/integrationTests/*.js",
-    "start": "node src/morbo"
+    "start": "node src/futurama"
   },
   "repository": {
     "type": "git",
