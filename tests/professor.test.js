@@ -5,15 +5,15 @@ const professor = require('../src/professor')
 const consts = require('../src/consts')
 
 describe('professor', function() {
-    describe('handleTeamCityMessage', function() {
+    describe('handleMessage', function() {
         let testHandle = (message, expected) => {
             it('should return ' + JSON.stringify(expected) + ' when given message: ' + JSON.stringify(message), () => {
-                let result = professor.handleTeamCityMessage(message)
+                let result = professor.handleMessage(message)
                 assert.deepEqual(result, expected)
             })
         }
 
-        describe('when handling a team city message that is empty', () => {
+        describe('when handling a message that is empty', () => {
             let message = {}
             let expected = {
                 slackMessage: {},
@@ -23,7 +23,7 @@ describe('professor', function() {
             testHandle(message, expected)
         })
 
-        describe('when handling a failed/success team city message', () => {
+        describe('when handling a failed/success message', () => {
             let message = messageMother()
             let expected = {
                 slackMessage: { 
@@ -60,7 +60,7 @@ describe('professor', function() {
             testHandle(message, expected)
         })
 
-        describe('when handling a team city message and there are no attachments', () => {
+        describe('when handling a message and there are no attachments', () => {
             let message = messageMother()
             message.attachments = []
             let expected = {
@@ -70,74 +70,7 @@ describe('professor', function() {
                 }
             testHandle(message, expected)
         })
-    })
-
-    describe('handleOctopusMessage', function() {
-        let testHandle = (message, expected) => {
-            it('should return ' + JSON.stringify(expected) + ' when given message: ' + JSON.stringify(message), () => {
-                let result = professor.handleOctopusMessage(message)
-                assert.deepEqual(result, expected)
-            })
-        }
-
-        describe('when handling an octopus message that is empty', () => {
-            let message = {}
-            let expected = {
-                slackMessage: {},
-                code: 200,
-                message: 'okay'
-            }
-            testHandle(message, expected)
-        })
-
-        describe('when handling a failed/success octopus message', () => {
-            let message = messageMother()
-            let expected = {
-                slackMessage: { 
-                    channel: consts.botTestingChannelId, 
-                    username: 'Professor',
-                    as_user: false,
-                    icon_emoji: ':good-news:',
-                    text: 'Good news everyone!',
-                    attachments: [
-                        {
-                            fallback: message.attachments[0].fallback,
-                            title: message.attachments[0].title,
-                            title_link: message.attachments[0].title_link,
-                            text: message.attachments[0].text,
-                            color: message.attachments[0].color,
-                            fields: [
-                                {
-                                    title: message.attachments[0].fields[0].title,
-                                    value: message.attachments[0].fields[0].value,
-                                    short: message.attachments[0].fields[0].short
-                                },
-                                {
-                                    title: message.attachments[0].fields[1].title,
-                                    value: message.attachments[0].fields[1].value,
-                                    short: message.attachments[0].fields[1].short
-                                }
-                            ]
-                        }
-                    ]
-                },
-                code: 200,
-                message: 'success'
-            }
-            testHandle(message, expected)
-        })
-
-        describe('when handling a octopus message and there are no attachments', () => {
-            let message = messageMother()
-            message.attachments = []
-            let expected = {
-                slackMessage: [],
-                code: 200, 
-                message: 'okay'
-                }
-            testHandle(message, expected)
-        })
-    })
+    })    
 })
 
 function messageMother() {

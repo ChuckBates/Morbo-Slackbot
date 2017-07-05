@@ -23,14 +23,8 @@ function start() {
     });
 }
 
-server.post('/octopus', function create(req, res) {
-    var response = professor.handleOctopusMessage(req.body)
+server.post('/hook', function create(req, res) {
+    var response = professor.handleMessage(req.body)
     commands.postMessage(response.slackMessage)
     res.send(response.code, response.message)
- });
-
-server.post('/teamcity', function create(req, res) {
-    var response = professor.handleTeamCityMessage(req.body)
-    commands.postMessage(response.slackMessage)
-    res.send(response.code, response.body)
-})
+ })

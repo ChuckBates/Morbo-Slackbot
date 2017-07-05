@@ -1,11 +1,10 @@
 module.exports = {
-    handleOctopusMessage: handleOctopusMessage,
-    handleTeamCityMessage: handleTeamCityMessage
+    handleMessage: handleMessage
 }
 
 var consts = require('./consts')
 
-function handleOctopusMessage(message) {
+function handleMessage(message) {
     if (message.attachments != undefined && message.attachments.length != 0) {
         return {
             slackMessage: { 
