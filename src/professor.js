@@ -18,11 +18,11 @@ function handleMessage(message) {
             code: 200,
             message: 'success'
         }        
-    } else {
-        return {
-            slackMessage: [],
-            code: 200, 
-            message: 'okay'
-        }
+    }
+    
+    return {
+        slackMessage: [],
+        code: 200, 
+        message: 'okay'
     }
 }
